@@ -9,7 +9,7 @@ NUM_WORKERS=3
 DJANGO_PROJECT_NAME=example
 DJANGO_SETTINGS_MODULE=$DJANGO_PROJECT_NAME.settings.production
 DJANGO_WSGI_MODULE=$DJANGO_PROJECT_NAME.wsgi
-VIRTUALENV=devllnola
+VIRTUALENV=livinglots_virtualenv
 LOGDIR=$HOME/webapps/example/logs
 
 echo "Starting $NAME"
