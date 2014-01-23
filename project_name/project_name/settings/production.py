@@ -19,25 +19,21 @@ FACILITATORS = {
     ],
 }
 
-ALLOWED_HOSTS = [get_env_variable('ALLOWED_HOSTS')]
+ALLOWED_HOSTS = get_env_variable('ALLOWED_HOSTS').split(',')
 
 #
-# johnny cache
+# cache-machine
 #
-MIDDLEWARE_CLASSES = (
-    'johnny.middleware.LocalStoreClearMiddleware',
-    'johnny.middleware.QueryCacheMiddleware',
-) + MIDDLEWARE_CLASSES
 
 CACHES = {
-    'default' : dict(
-        BACKEND = 'johnny.backends.memcached.MemcachedCache',
-        LOCATION = [get_env_variable('MEMCACHE_LOCATION')],
-        JOHNNY_CACHE = True,
-    )
+    'default': {
+        'BACKEND': 'caching.backends.memcached.MemcachedCache',
+        'LOCATION': [
+            get_env_variable('MEMCACHE_LOCATION'),
+        ],
+    },
 }
-
-JOHNNY_MIDDLEWARE_KEY_PREFIX = get_env_variable('CACHE_KEY_PREFIX')
+CACHE_COUNT_TIMEOUT = 60
 
 
 #
@@ -74,7 +70,7 @@ LOGGING = {
         'log_file': {
             'level': 'WARNING',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(PROJECT_ROOT, 'logs', 'django.log'),
+            'filename': os.path.join(PROJECT_ROOT, '../../logs', 'django.log'),
             'maxBytes': '16777216', # 16megabytes
             'formatter': 'verbose'
         },
@@ -96,3 +92,11 @@ LOGGING = {
         'level': 'WARNING',
     },
 }
+
+
+#
+# SSL
+#
+# TODO uncomment for SSL
+#CSRF_COOKIE_SECURE = True
+#SESSION_COOKIE_SECURE = True

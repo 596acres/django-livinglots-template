@@ -145,6 +145,7 @@ INSTALLED_APPS = (
     'feincms',
     'feincms.module.medialibrary',
     'feincms.module.page',
+    'flatblocks',
     'honeypot',
     'imagekit',
     'inplace',
@@ -154,11 +155,24 @@ INSTALLED_APPS = (
     'reversion',
     'reversion_compare',
     'south',
+    'widget_tweaks',
 
     #
     # first-party, project-generic
     #
+    'external_data_sync',
     'inplace_activity_stream',
+    'pagepermissions',
+
+    #
+    # Living Lots
+    #
+    'livinglots_lots',
+    'livinglots_notify',
+    'livinglots_organize',
+    'livinglots_owners',
+    'livinglots_pathways',
+    'livinglots_steward',
     'livinglots_usercontent.files',
     'livinglots_usercontent.notes',
     'livinglots_usercontent.photos',
@@ -170,7 +184,13 @@ INSTALLED_APPS = (
     'blog',
     'cms',
     'contact',
+    'groundtruth',
     'lots',
+    'organize',
+    'owners',
+    'pathways',
+    'steward',
+    'usercontent',
 )
 
 LOGGING = {
@@ -212,7 +232,9 @@ ACTSTREAM_SETTINGS = {
     'MODELS': (
         'auth.user',
         'files.file',
+        'lots.lot',
         'notes.note',
+        'organize.organizer',
         'photos.photo',
     ),
     'USE_JSONFIELD': True,
@@ -223,16 +245,6 @@ FACILITATORS = {
     'global': [],
 }
 
-# TODO replace with project reasons and email addresses
-CONTACT_FORM_REASONS = OrderedDict([
-    ('The lot I want permission to use is not here.', ['info@example.com',]),
-    ('I want to share my land access story.', ['info@example.com',]),
-    ('I want to loan or lease my land for a temporary project.', ['info@example.com',]),
-    ('I want to invite admins to an event.', ['info@example.com',]),
-    ('I want to reach 596 Acres, the team that made this site.', ['paula@596acres.org',]),
-    ('I have a press inquiry.', ['info@example.com',]),
-])
-
 # TODO Replace with project name
 EMAIL_SUBJECT_PREFIX = '[] '
 
@@ -242,8 +254,9 @@ MAILREADER_HOST = get_env_variable('MAILREADER_HOST')
 MAILREADER_HOST_USER = get_env_variable('MAILREADER_HOST_USER')
 MAILREADER_HOST_PASSWORD = get_env_variable('MAILREADER_HOST_PASSWORD')
 
+FEINCMS_RICHTEXT_INIT_TEMPLATE = 'admin/content/richtext/init_richtext.html'
 FEINCMS_RICHTEXT_INIT_CONTEXT = {
-    'TINYMCE_JS_URL': STATIC_URL + 'js/lib/tiny_mce/tiny_mce.js',
+    'TINYMCE_JS_URL': STATIC_URL + 'bower_components/tinymce/js/tinymce/tinymce.js',
 }
 
 def elephantblog_entry_url_app(self):
@@ -268,11 +281,32 @@ ABSOLUTE_URL_OVERRIDES = {
     'elephantblog.categorytranslation': elephantblog_categorytranslation_url_app,
 }
 
-HONEYPOT_FIELD_NAME = 'homepage'
-HONEYPOT_VALUE = 'http://example.com/'
-
-ORGANIZE = {
-    'ORGANIZER_MODEL': '', # TODO set
+SOUTH_MIGRATION_MODULES = {
+    'page': 'cms.migrate.page',
+    'medialibrary': 'cms.migrate.medialibrary',
 }
 
+HONEYPOT_FIELD_NAME = 'homepage_url'
+HONEYPOT_VALUE = 'http://example.com/'
+
 ADMIN_TOOLS_INDEX_DASHBOARD = '{{ project_name }}.admindashboard.LivingLotsDashboard'
+
+LIVING_LOTS = {
+    'MODELS': {
+        'lot': 'lots.Lot',
+        'lotgroup': 'lots.LotGroup',
+        'organizer': 'organize.Organizer',
+        'owner': 'owners.Owner',
+        'pathway': 'pathways.Pathway',
+    },
+}
+
+# TODO replace with project reasons and email addresses
+CONTACT_FORM_REASONS = OrderedDict([
+    ('The lot I want permission to use is not here.', ['info@example.com',]),
+    ('I want to share my land access story.', ['info@example.com',]),
+    ('I want to loan or lease my land for a temporary project.', ['info@example.com',]),
+    ('I want to invite admins to an event.', ['info@example.com',]),
+    ('I want to reach 596 Acres, the team that made this site.', ['paula@596acres.org',]),
+    ('I have a press inquiry.', ['info@example.com',]),
+])
