@@ -44,11 +44,11 @@ git+git://github.com/feincms/feincms-elephantblog/@465b30bf727bc456f44e7f64a0738
 git+git://github.com/jmoiron/johnny-cache/@37e75019625979487f17b47050da7f0af3fea42c
 
 # Living Lots
-git+git://github.com/596acres/django-livinglots/@62e59e2
-git+git://github.com/596acres/django-livinglots-forms/@17c25851b
-django-livinglots-generictags==1.0
-git+git://github.com/596acres/django-livinglots-genericviews/@572990a38
+git+git://github.com/596acres/django-livinglots/@master
+git+git://github.com/596acres/django-livinglots-forms/@master
+git+git://github.com/596acres/django-livinglots-generictags/@master
+git+git://github.com/596acres/django-livinglots-genericviews/@master
 git+git://github.com/596acres/django-livinglots-groundtruth/@master
-git+git://github.com/596acres/django-livinglots-lots/@19b6c3a73
-git+git://github.com/596acres/django-livinglots-owners/@8afa295b5c
-git+git://github.com/596acres/django-livinglots-usercontent/@0.1.1
+git+git://github.com/596acres/django-livinglots-lots/@master
+git+git://github.com/596acres/django-livinglots-owners/@master
+git+git://github.com/596acres/django-livinglots-usercontent/@master
