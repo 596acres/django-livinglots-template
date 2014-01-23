@@ -8,7 +8,7 @@ define(
     [
         'jquery',
 
-        'lib/bootstrap/bootstrap-dropdown'
+        'bootstrap'
     ], function ($) {
 
         /*
@@ -51,5 +51,13 @@ define(
         /*
          * Page-specific modules
          */
+
+        if ($('.map-page').length !== 0) {
+            require(['mappage']);
+        }
+
+        if ($('.lot-detail-page').length !== 0) {
+            require(['lotdetailpage']);
+        }
 
 });

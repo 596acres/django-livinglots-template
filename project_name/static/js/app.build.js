@@ -4,7 +4,7 @@
 
     mainConfigFile: 'app.js',
 
-    name: 'lib/almond',
+    name: '../bower_components/almond/almond',
     out: '../main-built.js',
     include: [
 
@@ -15,6 +15,8 @@
 
         // require()d dependencies
         'fancybox',
+        'mappage',
+        'underscore'
     ],
     insertRequire: ['main'],
 
