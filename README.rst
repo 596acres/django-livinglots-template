@@ -15,4 +15,4 @@ Organization
 License
 -------
 
-
+GNU Affero General Public License. See LICENSE.
