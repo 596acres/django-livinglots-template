@@ -118,5 +118,4 @@ class LotFilter(django_filters.FilterSet):
             'parents_only',
             'projects',
             'public_owners',
-            'zipcode',
         ]
