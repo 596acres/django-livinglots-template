@@ -22,11 +22,19 @@ def get_env_variable(var_name):
 
 DATABASES = {
     'default': {
-        # > createdb -T template_postgis {{ project_name }}
-        # > psql
-        # # create user {{ project_name }} with password 'password';
-        # # grant all privileges on database {{ project_name }} to
-        # {{ project_name }};
+        # PostGIS < 2.0:
+        #  > createdb -T template_postgis {{ project_name }}
+        #  > psql
+        #  # create user {{ project_name }} with password 'password';
+        #  # grant all privileges on database {{ project_name }} to {{ project_name }};
+        #
+        # PostGIS >= 2.0:
+        #  > createdb {{ project_name }}
+        #  > psql {{ project_name }}
+        #  # create extension postgis;
+        #  # create extension postgis_topology;
+        #  # create user {{ project_name }} with password 'password';
+        #  # grant all privileges on database {{ project_name }} to {{ project_name }};
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': get_env_variable('DB_NAME'),
         'USER': get_env_variable('DB_USER'),
