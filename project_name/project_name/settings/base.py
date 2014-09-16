@@ -162,7 +162,6 @@ INSTALLED_APPS = (
     'mptt',
     'reversion',
     'reversion_compare',
-    'south',
     'widget_tweaks',
 
     #
