@@ -5,12 +5,10 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 import autocomplete_light
-import external_data_sync
 
 from registration.forms import AuthenticationForm
 
 autocomplete_light.autodiscover()
-external_data_sync.autodiscover()
 admin.autodiscover()
 
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT,

@@ -167,7 +167,6 @@ INSTALLED_APPS = (
     #
     # first-party, project-generic
     #
-    'external_data_sync',
     'inplace_activity_stream',
     'pagepermissions',
 
