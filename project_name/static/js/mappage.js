@@ -4,177 +4,227 @@
 // Scripts that only run on the map page.
 //
 
-define(
-    [
-        'django',
-        'jquery',
-        'handlebars',
-        'underscore',
-        'leaflet',
-        'spin',
-        'singleminded',
+var _ = require('underscore');
+var Handlebars = require('handlebars');
+var L = require('leaflet');
+var Spinner = require('spinjs');
+var singleminded = require('./singleminded');
+var initWelcome = require('./welcome').init;
 
-        'jquery.infinitescroll',
+require('jquery.infinitescroll');
+require('leaflet.loading');
+require('./leaflet.lotmap');
+require('./map.search.js');
+require('./overlaymenu');
 
-        'leaflet.loading',
-        'leaflet.lotmap',
 
-        'map.search',
-    ], function (Django, $, Handlebars, _, L, Spinner, singleminded) {
+function buildLotFilterParams(map, options) {
+    var layers = _.map($('.filter-layer:checked'), function (layer) {
+        return $(layer).attr('name'); 
+    });
+    var publicOwners = _.map($('.filter-owner-public:checked'), function (ownerFilter) {
+        return $(ownerFilter).data('ownerPk');
+    });
+    var params = {
+        layers: layers.join(','),
+        parents_only: true,
+        projects: $('.filter-projects').val(),
+        public_owners: publicOwners.join(',')
+    };
 
-        function buildLotFilterParams(map, options) {
-            var layers = _.map($('.filter-layer:checked'), function (layer) {
-                return $(layer).attr('name'); 
+    if (options && options.bbox) {
+        params.bbox = map.getBounds().toBBoxString();
+    }
+
+    return params;
+}
+
+function updateLotCount(map) {
+    var url = Django.url('lots:lot_count') + '?' +
+        $.param(buildLotFilterParams(map, { bbox: true }));
+    singleminded.remember({
+        name: 'updateLotCount',
+        jqxhr: $.getJSON(url, function (data) {
+            _.each(data, function (value, key) {
+                $('#' + key).text(value);
             });
-            var publicOwners = _.map($('.filter-owner-public:checked'), function (ownerFilter) {
-                return $(ownerFilter).data('ownerPk');
-            });
-            var params = {
-                layers: layers.join(','),
-                parents_only: true,
-                projects: $('.filter-projects').val(),
-                public_owners: publicOwners.join(',')
-            };
+        })
+    });
+}
 
-            if (options && options.bbox) {
-                params.bbox = map.getBounds().toBBoxString();
-            }
+function updateOwnershipOverview(map) {
+    var url = Django.url('lots:lot_ownership_overview'),
+        params = buildLotFilterParams(map, { bbox: true });
+    $.getJSON(url + '?' + $.param(params), function (data) {
+        var template = Handlebars.compile($('#details-template').html());
+        var content = template({
+            lottypes: data
+        });
+        $('.details-overview').html(content);
+    });
+}
 
-            return params;
-        }
+function updateDetailsLink(map) {
+    var params = buildLotFilterParams(map);
+    delete params.parents_only;
 
-        function updateLotCount(map) {
-            var url = Django.url('lots:lot_count') + '?' +
-                $.param(buildLotFilterParams(map, { bbox: true }));
-            singleminded.remember({
-                name: 'updateLotCount',
-                jqxhr: $.getJSON(url, function (data) {
-                    _.each(data, function (value, key) {
-                        $('#' + key).text(value);
-                    });
-                })
-            });
-        }
+    var l = window.location,
+        query = '?' + $.param(params),
+        url = l.protocol + '//' + l.host + l.pathname + query + l.hash;
+    $('a.details-link').attr('href', url);
+}
 
-        function updateOwnershipOverview(map) {
-            var url = Django.url('lots:lot_ownership_overview'),
-                params = buildLotFilterParams(map, { bbox: true });
-            $.getJSON(url + '?' + $.param(params), function (data) {
-                var template = Handlebars.compile($('#details-template').html());
-                var content = template({
-                    lottypes: data
-                });
-                $('.details-overview').html(content);
-            });
-        }
+function deparam() {
+    var vars = {},
+        param,
+        params = window.location.search.slice(1).split('&');
+    for(var i = 0; i < params.length; i++) {
+        param = params[i].split('=');
+        vars[param[0]] = decodeURIComponent(param[1]);
+    }
+    return vars;
+}
 
-        function updateDetailsLink(map) {
-            var params = buildLotFilterParams(map);
-            delete params.parents_only;
+function setFilters(params) {
+    // Clear checkbox filters
+    $('.filter[type=checkbox]').prop('checked', false);
 
-            var l = window.location,
-                query = '?' + $.param(params),
-                url = l.protocol + '//' + l.host + l.pathname + query + l.hash;
-            $('a.details-link').attr('href', url);
-        }
+    // Set layers filters
+    var layers = params.layers.split(',');
+    _.each(layers, function (layer) {
+        $('.filter-layer[name=' + layer +']').prop('checked', true);
+    });
 
-        function deparam() {
-            var vars = {},
-                param,
-                params = window.location.search.slice(1).split('&');
-            for(var i = 0; i < params.length; i++) {
-                param = params[i].split('=');
-                vars[param[0]] = decodeURIComponent(param[1]);
-            }
-            return vars;
-        }
+    // Set owners filters
+    var publicOwners = params.public_owners.split(',');
+    _.each(publicOwners, function (pk) {
+        $('.filter-owner-public[data-owner-pk=' + pk +']').prop('checked', true);
+    });
 
-        function setFilters(params) {
-            // Clear checkbox filters
-            $('.filter[type=checkbox]').prop('checked', false);
+    // Set boundaries filters
 
-            // Set layers filters
-            var layers = params.layers.split(',');
-            _.each(layers, function (layer) {
-                $('.filter-layer[name=' + layer +']').prop('checked', true);
-            });
+    var projects = params.projects;
+    if (projects !== '') {
+        $('.filter-projects').val(projects);
+    }
+}
 
-            // Set owners filters
-            var publicOwners = params.public_owners.split(',');
-            _.each(publicOwners, function (pk) {
-                $('.filter-owner-public[data-owner-pk=' + pk +']').prop('checked', true);
-            });
+function prepareOverlayMenus(map) {
+    $('.overlay-download-button').overlaymenu({
+        menu: '.overlaymenu-download'
+    });
 
-            // Set boundaries filters
+    $('.overlay-admin-button').overlaymenu({
+        menu: '.overlaymenu-admin'
+    });
 
-            var projects = params.projects;
-            if (projects !== '') {
-                $('.filter-projects').val(projects);
-            }
-        }
-
-        $(document).ready(function () {
-            var params;
-            if (window.location.search.length) {
-                params = deparam();
-                setFilters(params);
-            }
-
-            var map = L.lotMap('map', {
-
-                onMouseOverFeature: function (feature) {
-                },
-
-                onMouseOutFeature: function (feature) {
-                }
-
-            });
-
-            map.addLotsLayer(buildLotFilterParams(map));
-
-            $('.details-print').click(function () {
-                // TODO This is not a good solution since the map size changes
-                // on print. Look into taking screenshots like:
-                //   https://github.com/tegansnyder/Leaflet-Save-Map-to-PNG
-                //   http://html2canvas.hertzen.com
-                window.print();
-            });
-
-            $('form.map-search-form').mapsearch()
-                .on('searchstart', function (e) {
-                    map.removeUserLayer();
-                })
-                .on('searchresultfound', function (e, result) {
-                    map.addUserLayer([result.latitude, result.longitude]);
-                });
-
-            $('.filter').change(function () {
-                var params = buildLotFilterParams(map);
-                map.updateDisplayedLots(params);
-                updateLotCount(map);
-            });
-
-            updateLotCount(map);
-            map.on({
-                'moveend': function () {
-                    updateLotCount(map);
-                },
-                'zoomend': function () {
-                    updateLotCount(map);
-                },
-                'lotlayertransition': function (e) {
-                    map.addLotsLayer(buildLotFilterParams(map));
-                }
-            });
-
-            $('.export').click(function (e) {
-                var url = $(this).data('baseurl') + 
-                    $.param(buildLotFilterParams(map, { bbox: true }));
-                window.location.href = url;
-                e.preventDefault();
-            });
-
+    $('.overlay-details-button')
+        .overlaymenu({
+            menu: '.overlaymenu-details'
+        })
+        .on('overlaymenuopen', function () {
+            var spinner = new Spinner({
+                left: '0px',
+                top: '0px'
+            }).spin($('.details-overview')[0]);
+            updateDetailsLink(map);
+            updateOwnershipOverview(map);
         });
 
+    $('.overlay-news-button')
+        .overlaymenu({
+            menu: '.overlaymenu-news'
+        })
+        .on('overlaymenuopen', function () {
+            var spinner = new Spinner({
+                left: '0px',
+                top: '0px'
+            }).spin($('.activity-stream')[0]);
+
+            var url = Django.url('activitystream_activity_list');
+            $('.activity-stream').load(url, function () {
+                $('.action-list').infinitescroll({
+                    loading: {
+                        finishedMsg: 'No more activities to load.'
+                    },
+                    behavior: 'local',
+                    binder: $('.overlaymenu-news .overlaymenu-menu-content'),
+                    itemSelector: 'li.action',
+                    navSelector: '.activity-stream-nav',
+                    nextSelector: '.activity-stream-nav a:first'
+                });
+            });
+        });
+
+    $('.overlay-filter-button').overlaymenu({
+        menu: '.overlaymenu-filter'
+    });
+
+
+}
+
+$(document).ready(function () {
+    var params;
+    if (window.location.search.length) {
+        params = deparam();
+        setFilters(params);
     }
-);
+
+    var map = L.lotMap('map', {
+
+        onMouseOverFeature: function (feature) {
+        },
+
+        onMouseOutFeature: function (feature) {
+        }
+
+    });
+
+    map.addLotsLayer(buildLotFilterParams(map));
+
+    prepareOverlayMenus(map);
+
+    $('.details-print').click(function () {
+        // TODO This is not a good solution since the map size changes
+        // on print. Look into taking screenshots like:
+        //   https://github.com/tegansnyder/Leaflet-Save-Map-to-PNG
+        //   http://html2canvas.hertzen.com
+        window.print();
+    });
+
+    $('form.map-search-form').mapsearch()
+        .on('searchstart', function (e) {
+            map.removeUserLayer();
+        })
+        .on('searchresultfound', function (e, result) {
+            map.addUserLayer([result.latitude, result.longitude]);
+        });
+
+    $('.filter').change(function () {
+        var params = buildLotFilterParams(map);
+        map.updateDisplayedLots(params);
+        updateLotCount(map);
+    });
+
+    updateLotCount(map);
+    map.on({
+        'moveend': function () {
+            updateLotCount(map);
+        },
+        'zoomend': function () {
+            updateLotCount(map);
+        },
+        'lotlayertransition': function (e) {
+            map.addLotsLayer(buildLotFilterParams(map));
+        }
+    });
+
+    $('.export').click(function (e) {
+        var url = $(this).data('baseurl') + 
+            $.param(buildLotFilterParams(map, { bbox: true }));
+        window.location.href = url;
+        e.preventDefault();
+    });
+
+    initWelcome();
+});

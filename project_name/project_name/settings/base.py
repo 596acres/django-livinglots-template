@@ -5,9 +5,7 @@ from os.path import abspath, dirname
 from django.core.exceptions import ImproperlyConfigured
 
 
-# TODO Set to the prefix that will come before each of your environment
-# variable names
-ENV_VARIABLE_PREFIX = None
+ENV_VARIABLE_PREFIX = 'LL'
 
 def get_env_variable(var_name):
     """Get the environment variable or return exception"""
@@ -23,18 +21,18 @@ def get_env_variable(var_name):
 DATABASES = {
     'default': {
         # PostGIS < 2.0:
-        #  > createdb -T template_postgis {{ project_name }}
+        #  > createdb -T template_postgis livinglots
         #  > psql
-        #  # create user {{ project_name }} with password 'password';
-        #  # grant all privileges on database {{ project_name }} to {{ project_name }};
+        #  # create user livinglots with password 'password';
+        #  # grant all privileges on database livinglots to livinglots;
         #
         # PostGIS >= 2.0:
-        #  > createdb {{ project_name }}
-        #  > psql {{ project_name }}
+        #  > createdb livinglots
+        #  > psql livinglots
         #  # create extension postgis;
         #  # create extension postgis_topology;
-        #  # create user {{ project_name }} with password 'password';
-        #  # grant all privileges on database {{ project_name }} to {{ project_name }};
+        #  # create user livinglots with password 'password';
+        #  # grant all privileges on database livinglots to livinglots;
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': get_env_variable('DB_NAME'),
         'USER': get_env_variable('DB_USER'),
@@ -79,7 +77,6 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
 )
 
 SECRET_KEY = get_env_variable('SECRET_KEY')
@@ -145,7 +142,6 @@ INSTALLED_APPS = (
     #
     'actstream',
     'admin_enhancer',
-    'compressor',
     'contact_form',
     'django_monitor',
     'djangojs',
@@ -158,6 +154,7 @@ INSTALLED_APPS = (
     'imagekit',
     'inplace',
     'inplace.boundaries',
+    'inplace_activity_stream',
     'jsonfield',
     'mptt',
     'reversion',
@@ -167,7 +164,6 @@ INSTALLED_APPS = (
     #
     # first-party, project-generic
     #
-    'inplace_activity_stream',
     'pagepermissions',
 
     #
@@ -186,7 +182,6 @@ INSTALLED_APPS = (
     #
     # first-party, project-specific
     #
-    'activity_stream',
     'blog',
     'cms',
     'contact',
@@ -223,11 +218,6 @@ LOGGING = {
     },
 }
 
-PLACES_CLOUDMADE_KEY = '781b27aa166a49e1a398cd9b38a81cdf'
-PLACES_CLOUDMADE_STYLE = '96818'
-
-SOUTH_TESTS_MIGRATE = False
-
 RECAPTCHA_PRIVATE_KEY = get_env_variable('RECAPTCHA_PRIVATE_KEY')
 RECAPTCHA_PUBLIC_KEY = get_env_variable('RECAPTCHA_PUBLIC_KEY')
 
@@ -251,8 +241,7 @@ FACILITATORS = {
     'global': [],
 }
 
-# TODO Replace with project name
-EMAIL_SUBJECT_PREFIX = '[] '
+EMAIL_SUBJECT_PREFIX = '[Living Lots] '
 
 MAILREADER_REPLY_PREFIX = 'Reply with text above this line to post a public note.'
 MAILREADER_IGNORE_FROM = []

@@ -44,6 +44,15 @@ LOGGING = {
 
 
 #
+# Django extensions
+#
+
+INSTALLED_APPS += (
+    'django_extensions',
+)
+
+
+#
 # debug toolbar settings
 #
 
@@ -51,12 +60,10 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'django_pdb.middleware.PdbMiddleware',
 )
 
 INSTALLED_APPS += (
     'debug_toolbar',
-    'django_pdb',
 )
 
 DEBUG_TOOLBAR_PANELS = (
@@ -79,3 +86,6 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+LOT_CENTROIDS_URL = "http://localhost:8080/lots-centroids/"
+LOT_POLYGONS_URL = "http://localhost:8080/lots-polygons/"
