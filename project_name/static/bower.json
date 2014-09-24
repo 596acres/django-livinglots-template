@@ -1,8 +1,8 @@
 {
-  "name": "{{ project_name }}",
+  "name": "livinglots-nyc",
   "version": "0.0.0",
   "authors": [
-    ""
+    "Eric Brelsford <ebrelsford@gmail.com>"
   ],
   "license": "MIT",
   "private": true,

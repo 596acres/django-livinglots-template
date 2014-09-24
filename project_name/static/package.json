@@ -1,8 +1,8 @@
 {
-  "name": "{{ project_name }}",
+  "name": "livinglots-nyc",
   "version": "0.0.0",
-  "description": "Static media for {{ project_name }}",
-  "author": "",
+  "description": "Static media for livinglots-nyc",
+  "author": "Eric Brelsford",
   "license": "BSD-2-Clause",
   "main": "index.js",
   "dependencies": {
