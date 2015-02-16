@@ -19,7 +19,6 @@ FeinCMS==1.10.0
 django-activity-stream>=0.5.1
 django-admin-enhancer==0.1.2
 django-admin-tools==0.5.1
-django-appconf==0.6
 django-autocomplete-light==1.4.13
 django-braces==1.4.0
 git+git://github.com/jbalogh/django-cache-machine/@master
