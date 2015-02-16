@@ -33,7 +33,6 @@ django-imagekit==3.2
 git+git://github.com/ebrelsford/django-inplace/@master
 git+git://github.com/ebrelsford/django-inplace-activity-stream/@master
 django-jsonfield==0.9.12
-django-model-utils==1.4.0
 git+git://github.com/ebrelsford/Django-monitor/@master
 django-mptt==0.6.0
 django-reversion==1.7.1
