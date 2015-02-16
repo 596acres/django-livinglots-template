@@ -30,7 +30,7 @@ django-honeypot==0.4.0
 django-imagekit==3.2.5
 git+git://github.com/ebrelsford/django-inplace/@master
 git+git://github.com/ebrelsford/django-inplace-activity-stream/@master
-django-jsonfield==0.9.12
+django-jsonfield==0.9.13
 git+git://github.com/ebrelsford/Django-monitor/@master
 django-reversion==1.8.5
 django-reversion==0.4.0
