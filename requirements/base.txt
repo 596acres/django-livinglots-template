@@ -8,10 +8,9 @@ lxml==3.1.0
 pilkit==1.1.6
 psycopg2==2.4.6
 python-dateutil==2.4.0
-simplejson==3.0.7
 six==1.9.0
 wsgiref==0.1.2
-geojson==1.0.1
+geojson==1.0.9
 
 # Django-specific requirements
 Django>=1.7
