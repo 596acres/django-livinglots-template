@@ -2,7 +2,7 @@
 Fabric>=1.10.1
 IMAPClient>=0.10.2
 Pillow==2.3.1
-Pint==0.4.2
+Pint==0.6
 ipython>=2.0.0
 lxml==3.1.0
 pilkit==1.1.6
