@@ -36,7 +36,7 @@ git+git://github.com/ebrelsford/Django-monitor/@master
 django-reversion==1.8.5
 django-reversion==0.4.0
 django.js==0.8.1
-feincms-cleanse==2
+feincms-cleanse==5
 git+git://github.com/feincms/feincms-elephantblog/@465b30bf727bc456f44e7f64a0738efadd845618
 git+git://github.com/ebrelsford/feincms-pagepermissions@master
 django-widget-tweaks==1.3
