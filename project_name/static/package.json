@@ -6,7 +6,24 @@
   "license": "BSD-2-Clause",
   "main": "index.js",
   "dependencies": {
-    "tinymce": "^4.0.28"
+    "bootstrap": "^3.3.2",
+    "fancybox": "^2.1.7",
+    "handlebars": "^2.0.0",
+    "jquery-infinite-scroll": "git://github.com/paulirish/infinite-scroll",
+    "leaflet": "~0.7.3",
+    "leaflet-dataoptions": "^1.0.0",
+    "leaflet-hash": "^0.2.1",
+    "leaflet-loading": "^0.1.15",
+    "leaflet-pip": "^0.1.1",
+    "leaflet-plugins": "^1.2.0",
+    "leaflet-tilelayer-vector": "git://github.com/ebrelsford/leaflet-tilelayer-vector",
+    "leaflet-usermarker": "^1.0.0",
+    "livinglots-map": "git://github.com/596acres/livinglots-map",
+    "proj4": "^2.3.3",
+    "select2": "^3.5.2-browserify",
+    "spin.js": "^2.0.2",
+    "tinymce": "^4.1.7",
+    "underscore": "^1.7.0"
   },
   "devDependencies": {
     "browserify": "^8.1.3",
@@ -27,28 +44,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "browser": {
-    "bootstrap_modal": "./bower_components/bootstrap/js/modal.js",
-    "fancybox": "./bower_components/fancybox/source/jquery.fancybox.js",
-    "handlebars": "./bower_components/handlebars/handlebars.js",
-    "jquery.infinitescroll": "./bower_components/infinite-scroll/jquery.infinitescroll.js",
-    "leaflet": "./bower_components/leaflet/dist/leaflet-src.js",
-    "leaflet-active-area": "./bower_components/leaflet-active-area/src/leaflet.activearea.js",
-    "leaflet.bing": "./bower_components/leaflet-plugins/layer/tile/Bing.js",
-    "leaflet.dataoptions": "./bower_components/leaflet.dataoptions/src/leaflet.dataoptions.js",
-    "leaflet.handlebars": "./bower_components/leaflet.handlebars/src/leaflet.handlebars.js",
-    "leaflet.hash": "./bower_components/leaflet-hash/leaflet-hash.js",
-    "leaflet.loading": "./bower_components/leaflet.loading/src/Control.Loading.js",
-    "leaflet.usermarker": "./bower_components/leaflet.usermarker/src/leaflet.usermarker.js",
-    "spinjs": "./bower_components/spin.js/spin.js",
-    "underscore": "./bower_components/underscore/underscore.js",
-
-    "communist": "./bower_components/leaflet-tilelayer-vector/lib/communist.min.js",
-    "AbstractWorker": "./bower_components/leaflet-tilelayer-vector/src/AbstractWorker.js",
-    "CommunistWorker": "./bower_components/leaflet-tilelayer-vector/src/CommunistWorker.js",
-    "TileCache": "./bower_components/leaflet-tilelayer-vector/src/TileCache.js",
-    "TileLayer.GeoJSON": "./bower_components/leaflet-tilelayer-vector/src/TileLayer.GeoJSON.js",
-    "TileLayer.Overzoom": "./bower_components/leaflet-tilelayer-vector/src/TileLayer.Overzoom.js",
-    "TileQueue": "./bower_components/leaflet-tilelayer-vector/src/TileQueue.js"
+    "bootstrap_button": "./node_modules/bootstrap/js/button.js",
+    "bootstrap_collapse": "./node_modules/bootstrap/js/collapse.js",
+    "bootstrap_dropdown": "./node_modules/bootstrap/js/dropdown.js",
+    "bootstrap_modal": "./node_modules/bootstrap/js/modal.js",
+    "bootstrap_tooltip": "./node_modules/bootstrap/js/tooltip.js",
+    "bootstrap_transition": "./node_modules/bootstrap/js/transition.js",
+    "jquery-infinite-scroll": "./node_modules/jquery-infinite-scroll/jquery.infinitescroll.js",
+    "leaflet-plugins-bing": "./node_modules/leaflet-plugins/layer/tile/Bing.js"
   },
   "browserify": {
     "transform": [
@@ -56,24 +59,10 @@
     ]
   },
   "browserify-shim": {
-    "communist": "communist",
-    "CommunistWorker": {
-        "depends": [
-            "communist:communist",
-            "leaflet",
-            "AbstractWorker"
-        ]
-    },
-    "handlebars": "Handlebars",
-    "leaflet.handlebars": { "depends": [ "handlebars:Handlebars" ] },
-    "spinjs": "Spinner",
-    "TileLayer.GeoJSON": {
-        "depends": [
-            "CommunistWorker",
-            "TileCache",
-            "TileLayer.Overzoom",
-            "TileQueue"
-        ]
+    "leaflet-plugins-bing": {
+      "depends": [
+        "leaflet:L"
+      ]
     }
   }
 }
