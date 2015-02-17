@@ -1,7 +1,7 @@
 {
-  "name": "livinglots-nyc",
+  "name": "livinglots-static",
   "version": "0.0.0",
-  "description": "Static media for livinglots-nyc",
+  "description": "Static media for livinglots",
   "author": "Eric Brelsford",
   "license": "BSD-2-Clause",
   "main": "index.js",
